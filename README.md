@@ -11,6 +11,8 @@ This branch does **not** translate comments yet. V0.1 establishes the runtime ho
 - Package: `com.google.android.youtube`
 - Modern Xposed API: 102
 - Minimum Android: 8.0 (API 26)
+- Build/target SDK: Android 16 (API 36)
+- Build Tools: 36.0.0
 - Build JDK: 21
 
 ### What V0.1 does
@@ -23,7 +25,7 @@ This branch does **not** translate comments yet. V0.1 establishes the runtime ho
 
 ### Build
 
-GitHub Actions builds the debug APK automatically. Locally, use Gradle 9.5.1 with JDK 21 and Android SDK 37:
+GitHub Actions builds the debug APK automatically. Locally, use Gradle 9.5.1 with JDK 21 and Android SDK 36:
 
 ```bash
 gradle :app:assembleDebug
