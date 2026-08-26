@@ -9,7 +9,7 @@ This branch does **not** translate comments yet. V0.1 establishes the runtime ho
 ### Target
 
 - Package: `com.google.android.youtube`
-- Modern Xposed API: 102
+- Modern Xposed API: minimum 101, target 102
 - Minimum Android: 8.0 (API 26)
 - Build/target SDK: Android 16 (API 36)
 - Build Tools: 36.0.0
@@ -40,15 +40,15 @@ app/build/outputs/apk/debug/app-debug.apk
 ### Test on device
 
 1. Install the debug APK.
-2. Enable **YouTubeTranslate** in LSPosed.
+2. Enable **YouTubeTranslate** in LSPosed or another framework implementing Modern Xposed API 101/102.
 3. Confirm the scope contains only **YouTube**.
 4. Force-stop YouTube and reopen it.
-5. Open a video and expand the comments section.
+5. Open a video and expand the comments section, then scroll through roughly 10–20 comments.
 6. Capture logs:
 
 ```bash
 adb logcat -c
-adb logcat -s YouTubeTranslate
+adb logcat -v time -s YouTubeTranslate
 ```
 
 Look for records beginning with `PROBE #`.
