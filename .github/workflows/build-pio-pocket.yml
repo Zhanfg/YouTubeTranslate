@@ -2,6 +2,11 @@ name: Build PIO Pocket APK
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-pio-pocket.yml'
+      - 'tools/piopocket/**'
 
 permissions:
   contents: read
