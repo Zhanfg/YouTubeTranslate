@@ -103,9 +103,10 @@ public final class MainActivity extends Activity {
                 JSONObject body=new JSONObject().put("message","Edit "+p+" via PIO Pocket")
                   .put("content",Base64.encodeToString(src.getBytes(StandardCharsets.UTF_8),Base64.NO_WRAP))
                   .put("sha",sha).put("branch",val(branch));
-                request("PUT","contents/"+escapedPath(p),body);
-                JSONObject updated=request("GET","contents/"+escapedPath(p)+"?ref="+enc(val(branch)),null);
-                loadedSha=updated.getString("sha");
+                JSONObject put=request("PUT","contents/"+escapedPath(p),body);
+                JSONObject content=put.optJSONObject("content");
+                if(content==null||!content.has("sha"))throw new IOException("GitHub 保存成功但未返回文件 SHA");
+                loadedSha=content.getString("sha");
                 return "已保存 "+p;
             });
         });
@@ -142,9 +143,11 @@ public final class MainActivity extends Activity {
     private interface Work{String run()throws Exception;}
     private void async(Work w){executor.execute(()->{try{say(w.run());}catch(Exception e){say("失败: "+e.getMessage());}});}
     private static String enc(String s)throws Exception{return java.net.URLEncoder.encode(s,"UTF-8");}
+    // Path segments must use RFC 3986 percent-encoding. URLEncoder is form-encoding and turns spaces into '+'.
+    private static String encPathSegment(String s)throws Exception{return enc(s).replace("+","%20");}
     private static String escapedPath(String p)throws Exception{
         if(p.isEmpty()||p.startsWith("/")||p.contains("..")||p.contains("\\"))throw new IOException("非法文件路径");
-        StringBuilder s=new StringBuilder();for(String x:p.split("/")){if(x.isEmpty())throw new IOException("非法文件路径");if(s.length()>0)s.append('/');s.append(enc(x));}return s.toString();
+        StringBuilder s=new StringBuilder();for(String x:p.split("/")){if(x.isEmpty())throw new IOException("非法文件路径");if(s.length()>0)s.append('/');s.append(encPathSegment(x));}return s.toString();
     }
     private JSONObject request(String method,String endpoint,JSONObject body)throws Exception{
         String own=val(owner),repository=val(repo);
